@@ -1,6 +1,3 @@
-
-
-import java.util.HashMap;
 /**
  * Class Room - a room in an adventure game.
  *
@@ -15,15 +12,13 @@ import java.util.HashMap;
  * @author  Michael Kölling and David J. Barnes
  * @version 2016.02.29
  */
-
 public class Room 
 {
-    private String description;
-    private HashMap<String, Room> exits;
-    private Room northExit;
-    private Room southExit;
-    private Room eastExit;
-    private Room westExit;
+    public String description;
+    public Room northExit;
+    public Room southExit;
+    public Room eastExit;
+    public Room westExit;
 
     /**
      * Create a room described "description". Initially, it has
@@ -34,7 +29,6 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
-        exits = new HashMap<>();
     }
 
     /**
@@ -59,16 +53,6 @@ public class Room
         if(west != null) {
             westExit = west;
         }
-    }
-
-    /**
-     * Retourneer een string met daarin de uitgang van de ruimte
-     * bijvoobeeld "Exits: north west".
-     * @return Een omschrijving van de aanwezige uitgangen in de ruimte
-     */
-    public Room getExit(String direction)
-    {
-        return exits.get(direction);
     }
 
     /**
