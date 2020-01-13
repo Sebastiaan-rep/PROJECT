@@ -82,6 +82,13 @@ public class Game
         System.out.println("Type 'help' if you need help.");
         System.out.println("hello mognool");
     }
+    
+    private void printLocationInfo(){
+        System.out.println("you are " + currentRoom.getDescription());
+        System.out.println("Exits: " );
+        printLocation = currentRoom.exits(direction);
+        System.out.println();
+    }
 
     /**
      * Given a command, process (that is: execute) the command.
