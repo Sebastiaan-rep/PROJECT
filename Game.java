@@ -120,10 +120,15 @@ public class Game
         else if (commandWord.equals("go")) {
             goRoom(command);
         }
+        else if (commandWord.equals("look" )){
+            look();
+        }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
-
+        else if (commandWord.equals("drink")) {
+            drink();
+        }
         return wantToQuit;
     }
 
@@ -140,7 +145,8 @@ public class Game
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        System.out.println("   go quit help");
+        parser.showCommands();
+       
     }
 
     /** 
@@ -187,4 +193,13 @@ public class Game
         System.out.print(currentRoom.getExitString());         
         System.out.println(); 
     }
+    private void look()
+    {
+      System.out.println(currentRoom.getLongDescription());
+    }
+    private void drink()
+    {
+        System.out.println("you drank a healing potion and gained 1 lifepoint");
+    }
+    
 }
