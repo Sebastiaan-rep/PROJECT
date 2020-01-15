@@ -19,6 +19,7 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private Room previousRoom;
 
     /**
      * Create the game and initialise its internal map.
@@ -127,6 +128,9 @@ public class Game
         else if (commandWord.equals("drink")) {
             drink();
         }
+        else if (commandWord.equals("back")){
+            goBack(command);
+        }
         return wantToQuit;
     }
 
@@ -143,7 +147,6 @@ public class Game
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        //parser.showCommands();
         System.out.println(parser.getCommandList());
        
     }
@@ -204,4 +207,33 @@ public class Game
         System.out.println("you drank a healing potion and gained 1 lifepoint");
     }
     
+    /**
+     * Voert de ruimte in en drukt de beschrijving van deze ruimte af op het scherm.
+     */
+    private void enterRoom(Room nextRoom)
+    {
+        previousRoom = currentRoom;
+        currentRoom = nextRoom;
+        System.out.println(currentRoom.getLongDescription());
+    }
+    
+    private void goBack(Command command)
+    {
+        if(command.hasSecondWord())
+        {
+            System.out.println("Go back to where?");
+            return;
+        }
+        
+        else if(previousRoom == null)
+        {
+            System.out.println("There is nowhere to go back to!");
+            return;
+        }
+        
+        else
+        {
+            enterRoom(previousRoom);
+        }
+    }
 }
