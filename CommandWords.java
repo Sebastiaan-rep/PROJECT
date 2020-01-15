@@ -48,5 +48,15 @@ public class CommandWords
         }
         System.out.println();
     }
+    
+        public String getCommandList()      
+    {         
+        String commandList = ""; 
+        for(String command  :  validCommands) 
+        {             
+            commandList += command + " ";         
+        }   
+        return commandList;
+    }
 }
 

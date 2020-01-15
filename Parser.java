@@ -62,11 +62,9 @@ public class Parser
             return new Command(null, word2); 
         }
     }
-    /**
-     * Druk een lijst af met geldige opdrachtwoorden
-     */
-    public void showCommands()
-    {
-        commands.showAll();
-    }
+
+    public String getCommandList()
+    {         
+        return commands.getCommandList();     
+    } 
 }

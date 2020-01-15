@@ -93,8 +93,6 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        //System.out.println("You are " + currentRoom.getDescription());
-        //System.out.print(currentRoom.getExitString());
         System.out.println(currentRoom.getLongDescription());
         System.out.println();
     }
@@ -145,7 +143,8 @@ public class Game
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        parser.showCommands();
+        //parser.showCommands();
+        System.out.println(parser.getCommandList());
        
     }
 
@@ -162,12 +161,15 @@ public class Game
         }
 
         String direction = command.getSecondWord();
-
-        {
-            Room nextRoom = currentRoom.getExit(direction);
-
+        Room nextRoom = currentRoom.getExit(direction);
+        
+        if(nextRoom == null){
+            System.out.println("There is no door!");
         }
-
+        else{
+            currentRoom = nextRoom;
+            System.out.println(currentRoom.getLongDescription());
+        }
     }
 
     /** 
