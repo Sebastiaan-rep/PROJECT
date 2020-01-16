@@ -1,3 +1,6 @@
+
+import java.util.Stack;
+import java.util.ArrayList;
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -19,6 +22,9 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private Stack<Room> backStack;
+    //private Player player;
+    ArrayList<Item> inventory = new ArrayList<Item>();
 
     /**
      * Create the game and initialise its internal map.
@@ -27,6 +33,7 @@ public class Game
     {
         createRooms();
         parser = new Parser();
+        backStack = new Stack();
     }
 
     /**
@@ -61,6 +68,9 @@ public class Game
         
         kelder.setExits("up", office);
         
+        lab.setItem(new Item("Banaan"));
+        
+       
 
         currentRoom = outside;  // start game outside
     }
@@ -126,11 +136,27 @@ public class Game
         }
         else if (commandWord.equals("drink")) {
             drink();
+        }else if (commandWord.equals("inventory")) {
+            printInventory();
         }
+        
+        
+        /*else if (commandWord.equals("drop"))
+            dropItem(command);
+        else if (commandWord.equals("take"))
+            takeItem(command);*/
         return wantToQuit;
     }
 
     // implementations of user commands:
+    private void printInventory(){
+        String output = "";
+        for(int i =0; i< inventory.size(); i++){
+            output += inventory.get(i).getDescription() + " " ;
+        }
+            System.out.println("you are carrying:");
+            System.out.println(output);
+        }
 
     /**
      * Print out some help information.
@@ -191,7 +217,7 @@ public class Game
     private void printLocationInfo()
     {
         System.out.println("You are " +                            
-            currentRoom.getDescription());         
+            currentRoom.getShortDescription());         
         System.out.print(currentRoom.getExitString());         
         System.out.println(); 
     }
@@ -203,5 +229,59 @@ public class Game
     {
         System.out.println("you drank a healing potion and gained 1 lifepoint");
     }
+    /*
+    private void dropItem(Command command)
+    {
+        if (!command.hasSecondWord()) {
+            // if there is no second word, we don't know what to drop...
+            System.out.println("Drop what?");
+            return;
+        }
+        
+        String droppedItem = command.getSecondWord();
+        
+        // Drop it
+        
+        Item temp = player.dropInventory(droppedItem);
+        if (temp != null)
+        {
+            
+            // Add it to the room's items
+            player.getCurrentRoom().setItem(temp.getName(), temp.getItemDescription());
+            
+            // Refresh inventory
+            System.out.println(player.getCurrentRoom().getLongDescription());
+            System.out.println(player.getInventoryString());
+        }      
+        
+    }
     
+    /** 
+     * "Take" was entered. Takes the specified item if it's in 
+     * the room, otherwise throws an error.
+    */
+    /*
+    private void takeItem(Command command)
+    {
+       if (!command.hasSecondWord()) {
+            // if there is no second word, we don't know what to drop...
+            System.out.println("Take what?");
+            return;
+        }
+        
+        String desiredItem = command.getSecondWord();
+              
+        // Remove it from the room's items
+        Item temp = player.getCurrentRoom() .delItem(desiredItem);
+        if (temp != null)
+        {     
+            // Add it to player's inventory
+            player.addInventory(temp.getName(), temp.getItemDescription());
+            
+            // Refresh inventory
+            System.out.println(player.getCurrentRoom().getLongDescription());
+            System.out.println(player.getInventoryString());
+        }
+    }
+    */
 }

@@ -1,5 +1,7 @@
-import java.util.HashMap;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.ArrayList;
 /**
  * Class Room - a room in an adventure game.
  *
@@ -17,7 +19,8 @@ import java.util.Set;
 public class Room 
 {
     private String description;
-    private HashMap<String, Room> exits;
+    private HashMap<String, Room> exits;        // stores exits of this room.
+    ArrayList<Item> items = new ArrayList<Item>();
 
     /**
      * Create a room described "description". Initially, it has
@@ -28,7 +31,28 @@ public class Room
     public Room(String description) 
     {
         this.description = description;
-        exits = new HashMap<>();
+        exits = new HashMap<String, Room>();
+    }
+    
+    /**
+     * @return The short description of the room
+     * (the one that was defined in the constructor).
+     */
+    public String getShortDescription()
+    {
+        return description;
+    }
+
+    /**
+     * Retourneer een lange omschrijving van deze ruimte, van de vorm:
+     *      Je bent nu in de Puzzelroom.
+     *      Exits: east south
+     * @return Een omschrijving van de ruimte en haar uitgangen.
+     */
+    public String getLongDescription()
+    {
+        
+        return "You are " + getExitString();
     }
 
     /**
@@ -42,6 +66,24 @@ public class Room
         exits.put(direction, neighbor);
     }
 
+    /**
+     * Retouneer een string met daarin de uitgangen van de ruimte,
+     * bijvoorbeeld "Exits: north west".
+     * @return Een omschrijving van de aanwezige uitgangen in de 
+     * ruimte.
+     */
+    public String getExitString()
+    {
+        String returnString = "\nExits:";
+        Set<String> keys = exits.keySet();
+        for(String exit : keys){
+            returnString += " " + exit;
+        }
+        returnString += "\nItems in the room: \n";
+        returnString += getRoomItems() + "\n";
+        return returnString;
+    }
+
     /**      
      * Retourneert een string die de uitgangen van de ruimte beschrijft,       
      * bijvoorbeeld:      
@@ -52,40 +94,20 @@ public class Room
         return exits.get(direction);
 
     }
-    
-    /**
-     * @return The description of the room.
-     */ 
-    public String getDescription()
-    {
-        return description;
+    public Item getItem(int index){
+        return items.get(index);
     }
-    
-    /**
-     * Retouneer een string met daarin de uitgangen van de ruimte,
-     * bijvoorbeeld "Exits: north west".
-     * @return Een omschrijving van de aanwezige uitgangen in de 
-     * ruimte.
-     */
-    public String getExitString()
-    {
-        String returnString = "Exits:";
-        Set<String> keys = exits.keySet();
-        for(String exit : keys){
-            returnString += " " + exit;
+    public void setItem(Item newitem){
+        items.add(newitem);
+       
+    }
+    public String getRoomItems(){
+       String output = "";
+        for(int i =0; i< items.size(); i++){
+            output += items.get(i).getDescription() + " " ;
         }
-        return returnString;
+            return output;
+        }
     }
     
-    /**
-     * Retourneer een lange omschrijving van deze ruimte, van de vorm:
-     *      Je bent nu in de Puzzelroom.
-     *      Exits: east south
-     * @return Een omschrijving van de ruimte en haar uitgangen.
-     */
-    public String getLongDescription()
-    {
-        return "You are " + description + ".\n" + getExitString();
-    }
-}   
-        
+   
