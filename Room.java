@@ -44,18 +44,6 @@ public class Room
     }
 
     /**
-     * Retourneer een lange omschrijving van deze ruimte, van de vorm:
-     *      Je bent nu in de Puzzelroom.
-     *      Exits: east south
-     * @return Een omschrijving van de ruimte en haar uitgangen.
-     */
-    public String getLongDescription()
-    {
-        
-        return "You are " + getExitString();
-    }
-
-    /**
      * Define the exits of this room.  Every direction either leads
      * to another room or is null (no exit there).
      * @param direction De richting van de uitgang
@@ -108,6 +96,15 @@ public class Room
         }
             return output;
         }
-    }
-    
-   
+    /**
+     * Retourneer een lange omschrijving van deze ruimte, van de vorm:
+     *      Je bent nu in de Puzzelroom.
+     *      Exits: east south
+     * @return Een omschrijving van de ruimte en haar uitgangen.
+     */
+    public String getLongDescription()
+    {
+        return "You are " + description + ".\n" + getExitString();
+        }
+}   
+

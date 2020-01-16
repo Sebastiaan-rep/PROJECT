@@ -1,4 +1,3 @@
-
 import java.util.Stack;
 import java.util.ArrayList;
 /**
@@ -22,9 +21,9 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
-    private Stack<Room> backStack;
     //private Player player;
     ArrayList<Item> inventory = new ArrayList<Item>();
+    private Room previousRoom;
 
     /**
      * Create the game and initialise its internal map.
@@ -33,7 +32,6 @@ public class Game
     {
         createRooms();
         parser = new Parser();
-        backStack = new Stack();
     }
 
     /**
@@ -139,12 +137,14 @@ public class Game
         }else if (commandWord.equals("inventory")) {
             printInventory();
         }
-        
-        
         /*else if (commandWord.equals("drop"))
             dropItem(command);
         else if (commandWord.equals("take"))
             takeItem(command);*/
+
+        else if (commandWord.equals("back")){
+            goBack(command);
+        }
         return wantToQuit;
     }
 
@@ -169,7 +169,6 @@ public class Game
         System.out.println("around at the university.");
         System.out.println();
         System.out.println("Your command words are:");
-        //parser.showCommands();
         System.out.println(parser.getCommandList());
        
     }
@@ -284,4 +283,34 @@ public class Game
         }
     }
     */
+   
+    /**
+     * Voert de ruimte in en drukt de beschrijving van deze ruimte af op het scherm.
+     */
+    private void enterRoom(Room nextRoom)
+    {
+        previousRoom = currentRoom;
+        currentRoom = nextRoom;
+        System.out.println(currentRoom.getLongDescription());
+    }
+    
+    private void goBack(Command command)
+    {
+        if(command.hasSecondWord())
+        {
+            System.out.println("Go back to where?");
+            return;
+        }
+        
+        else if(previousRoom == null)
+        {
+            System.out.println("There is nowhere to go back to!");
+            return;
+        }
+        
+        else
+        {
+            enterRoom(previousRoom);
+        }
+    }
 }
