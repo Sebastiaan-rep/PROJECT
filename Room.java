@@ -82,13 +82,16 @@ public class Room
         return exits.get(direction);
 
     }
+    
     public Item getItem(int index){
         return items.get(index);
     }
+    
     public void setItem(Item newitem){
         items.add(newitem);
        
     }
+    
     public String getRoomItems(){
        String output = "";
         for(int i =0; i< items.size(); i++){
@@ -96,6 +99,7 @@ public class Room
         }
             return output;
         }
+        
     /**
      * Retourneer een lange omschrijving van deze ruimte, van de vorm:
      *      Je bent nu in de Puzzelroom.
