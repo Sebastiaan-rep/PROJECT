@@ -20,8 +20,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    ArrayList<Item> items = new ArrayList<Item>();
-
+    private HashMap <String,Item> itemsInRoom = new HashMap<String, Item>();
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -33,7 +32,7 @@ public class Room
         this.description = description;
         exits = new HashMap<String, Room>();
     }
-    
+
     /**
      * @return The short description of the room
      * (the one that was defined in the constructor).
@@ -82,20 +81,29 @@ public class Room
         return exits.get(direction);
 
     }
-    public Item getItem(int index){
-        return items.get(index);
+
+    public Item getItem(String name){
+        return itemsInRoom.get(name);
     }
+
+
+    public void removeItem(String itemName){
+        itemsInRoom.remove(itemName);
+
+    }
+
     public void setItem(Item newitem){
-        items.add(newitem);
-       
+        itemsInRoom.put(newitem.name, newitem);
     }
+
     public String getRoomItems(){
-       String output = "";
-        for(int i =0; i< items.size(); i++){
-            output += items.get(i).getDescription() + " " ;
+        String output = "";
+        for(String itemName : itemsInRoom.keySet()){
+            output += "Item: " + itemsInRoom.get(itemName).getName() + itemsInRoom.get(itemName).getDescription() + ", Weight: " + itemsInRoom.get(itemName).getWeight() + "\n";
         }
-            return output;
-        }
+        return output;
+    }
+
     /**
      * Retourneer een lange omschrijving van deze ruimte, van de vorm:
      *      Je bent nu in de Puzzelroom.
@@ -105,6 +113,6 @@ public class Room
     public String getLongDescription()
     {
         return "You are " + description + ".\n" + getExitString();
-        }
+    }
 }   
 
