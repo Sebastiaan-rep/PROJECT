@@ -1,3 +1,4 @@
+import java.util.*;
 import java.util.Set;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,9 +19,12 @@ import java.util.ArrayList;
  */
 public class Room 
 {
+    private Random strength;
+    private int power;
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
     private HashMap <String,Item> itemsInRoom = new HashMap<String, Item>();
+    //private HashMap <String,Monster> monsterInRoom = new HashMap<String, Monster>();
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -31,6 +35,7 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<String, Room>();
+        strength = new Random();
     }
 
     /**
@@ -68,6 +73,7 @@ public class Room
         }
         returnString += "\nItems in the room: \n";
         returnString += getRoomItems() + "\n";
+        //returnString += getRoomMonsters() +"\n";
         return returnString;
     }
 
@@ -86,7 +92,6 @@ public class Room
         return itemsInRoom.get(name);
     }
 
-
     public void removeItem(String itemName){
         itemsInRoom.remove(itemName);
 
@@ -95,13 +100,43 @@ public class Room
     public void setItem(Item newitem){
         itemsInRoom.put(newitem.name, newitem);
     }
-
+    
+    /*
+    public void setMonster(Monster newMonster){
+        monsterInRoom.put(newMonster.name, newMonster);
+    }
+    */
     public String getRoomItems(){
         String output = "";
         for(String itemName : itemsInRoom.keySet()){
-            output += "Item: " + itemsInRoom.get(itemName).getName() + itemsInRoom.get(itemName).getDescription() + ", Weight: " + itemsInRoom.get(itemName).getWeight() + "\n";
+            output += itemsInRoom.get(itemName).getName() + itemsInRoom.get(itemName).getDescription() + ", Weight: " + itemsInRoom.get(itemName).getWeight() + "\n";
         }
         return output;
+    }
+    /*
+    public String getRoomMonsters(){
+        String output ="" ;
+        for (String monsterName : monsterInRoom.keySet()){
+         output+= "the monster: " + monsterInRoom.get(monsterName).getMonsterName();    
+        }
+        return output;
+    }
+    */
+   /**
+     * This method creates the fight scenario for each room.
+     */
+    public void fightWithMonster()
+    {
+        if (description.equals("in the hallway")){
+            Monster caveMonster = new Monster("hallway monster", 3);
+            Item hallwayReward = new Item("sword", 2);
+            caveMonster.printMonsterInfo(caveMonster, hallwayReward);
+        }
+        if (description.equals("in a forest")){
+           Monster forestMonster = new Monster("forest monster", 5);
+           Item forestReward = new Item("key", 0);
+           forestMonster.printMonsterInfo(forestMonster, forestReward);
+        }
     }
 
     /**
@@ -114,5 +149,5 @@ public class Room
     {
         return "You are " + description + ".\n" + getExitString();
     }
-}   
+}
 

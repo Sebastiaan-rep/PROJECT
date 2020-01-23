@@ -18,6 +18,7 @@ import java.util.*;
 
 public class Game 
 {
+    private Player player;
     private Parser parser;
     private Room currentRoom;
     private Room previousRoom;
@@ -25,15 +26,18 @@ public class Game
     private Item weight;
     Room outside, hallway, mainroom, puzzelroom, dinningroom, basement, 
     greenhouse, throneroom;
-    public int maxWeight = 0;
+    //private Room previousRoom;
+    private Stack<Room> history;
 
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
+        //Player = new Player();
         createRooms();
         parser = new Parser();
+        history = new Stack<Room>();
     }
 
     /**
@@ -64,13 +68,14 @@ public class Game
         dinningroom.setExits("east", throneroom);
 
         // All items in the rooms
-        hallway.setItem(new Item("A key", 5, " Weird key, wonder where it goes"));
+        hallway.setItem(new Item("key", 5, " this is a weird key, wonder where it goes"));
 
-        mainroom.setItem(new Item("A sword", 2, "A sharp sword"));
-        mainroom.setItem(new Item("a Health_potion", 3,"Refreshing drink"));
+        outside.setItem(new Item("sword", 2));
+        mainroom.setItem(new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils"));
 
-        basement.setItem(new Item("a Health_potion", 5, "Refreshing drink"));
+        basement.setItem(new Item("health_potion", 5, ": Refreshing drink, not as refreshing as pils"));
 
+        //Monster in the rooms
 
         currentRoom = outside;  // start game outside
     }
@@ -126,7 +131,7 @@ public class Game
             printHelp();
         }
         else if (commandWord.equals("go")){
-             goRoom(command);
+            goRoom(command);
         }
         else if (commandWord.equals("look" )){
             look();
@@ -144,11 +149,54 @@ public class Game
             getItem(command);
         }else if (commandWord.equals("drop")) {
             dropItem(command);
+        }else if (commandWord.equals("back")){
+            goBackRoom();
+        }else if (commandWord.equals("fight")){
+            fight();
         }
         return wantToQuit;
     }
 
     // implementations of user commands:
+    /**
+     * Attack a monster that is in the room
+     * 
+     * @param command
+     */
+    private void attack(Command command) {
+        if (!command.hasSecondWord()) {
+            // if there is no second word, we don't who to attack
+            setChanged();
+            notifyObservers("Attack what?");
+            return;
+        }
+
+        Room currentRoom = player1.getCurrentPlayerRoom();
+        Monster monster = currentRoom.getMonster(command.getSecondWord());
+
+        if (monster == null) {
+            // There is no monster by that name in the room
+            setChanged();
+            notifyObservers("There is no monster called "
+                + command.getSecondWord() + "!");
+        }
+        return;
+    }
+
+    /**
+     * Engage battle with creature
+     */
+
+    public void fight(){
+        boolean currentRoommonster = false;
+        if ( currentRoommonster!= false) {
+            System.out.println("Put your glasses on STUPID!");
+        }
+        else {
+            System.out.println("You attack the monster with your bare hands!" + " \n" + "Only one of you will remain victorious"); 
+        }
+    }
+
     private void dropItem(Command command) 
     {
         if(!command.hasSecondWord()) {
@@ -235,14 +283,11 @@ public class Game
             System.out.println("There is no door!");
         }
         else{
+            history.push(currentRoom);
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
-            if(currentRoom == throneroom){
-                System.out.println("You have saved the princes");
-            }
-            //return true;
-        } 
-        //return false;
+            currentRoom.fightWithMonster();
+        }
     }
 
     /** 
@@ -282,6 +327,7 @@ public class Game
     /**
      * Voert de ruimte in en drukt de beschrijving van deze ruimte af op het scherm.
      */
+
     private void enterRoom(Room nextRoom)
     {
         previousRoom = currentRoom;
@@ -307,5 +353,16 @@ public class Game
         {
             enterRoom(previousRoom);
         }
+    }
+
+    private void goBackRoom(){
+        if(history.isEmpty()){
+            System.out.println("There is nowhere to go!");
+        }
+        else{
+            currentRoom = history.pop();
+            printLocationInfo();
+        }
+
     }
 }
