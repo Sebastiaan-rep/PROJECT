@@ -24,11 +24,18 @@ public class Game
     private Room previousRoom;
     private HashMap <String,Item> inventory = new HashMap<String, Item>();
     private Item weight;
-    Room outside, hallway, mainroom, puzzelroom, dinningroom, basement, 
-    greenhouse, throneroom;
-    //private Room previousRoom;
     private Stack<Room> history;
-
+    private Menu menu;
+    private 
+    
+    Room outside, hallway, mainroom, puzzleroom, diningroom, basement, 
+    greenhouse, bossroom, backyard, kitchen;
+    
+    
+    public static void main(final String[] args){
+        new Menu().runMenu();
+    }
+    
     /**
      * Create the game and initialise its internal map.
      */
@@ -38,40 +45,68 @@ public class Game
         createRooms();
         parser = new Parser();
         history = new Stack<Room>();
+        menu = new Menu();
+        int weight = 0;
+        int health = 0;
+        player = new Player(weight, health);
     }
+    
+    public void menu(){
+        menu.runMenu();
+    }
+    
 
     /**
      * Create all the rooms and link their exits together.
+     * Create all items and place them inside of the rooms.
+     * @author Jia Wei Wang and Sebastiaan Rep
      */
     private void createRooms()
     {
 
         // create the rooms
-        outside = new Room("outside the main entrance of the Castle");
+        outside = new Room("outside the main entrance of king Java's Castle");
         hallway = new Room("in the hallway");
         mainroom = new Room("A big main room with expensive furniture");
-        dinningroom = new Room(" in Dinning room with a big table");
-        basement = new Room("in a big basement for random stuff");
+        puzzleroom = new Room("in puzzle room has alot of toys and games");
+        diningroom = new Room(" in Dinning room with a big table and lots of plastic food");
+        basement = new Room("in a big basement for random stuff en pils");
         greenhouse = new Room("This warm greenhouse has alot of fuit and vegetables");
-        puzzelroom = new Room("in puzzel room has alot of toys and games");
-        throneroom = new Room("OH S** this is the boss room");
+        backyard = new Room("This is just a simple backyard with neglected plants and a few candles");
+        kitchen = new Room("This room is very dark, smells like the kitchen. I need some light");
+        bossroom = new Room("OH S** this is the boss room");
+        
         // initialise room exits
         outside.setExits("east", hallway);
 
         hallway.setExits("east", mainroom);
 
-        mainroom.setExits("north", puzzelroom);
-        mainroom.setExits("south", dinningroom);
+        mainroom.setExits("north", puzzleroom);
+        mainroom.setExits("south", diningroom);
+        
+        puzzleroom.setExits("east", greenhouse);
+        puzzleroom.setExits("south", mainroom);
+        
+        greenhouse.setExits("east", bossroom);
+        greenhouse.setExits("south", backyard);
+        greenhouse.setExits("west", puzzleroom);
+        
+        backyard.setExits("north", greenhouse);
+        backyard.setExits("south", kitchen);
+        backyard.setExits("west", mainroom);
+        
+        kitchen.setExits("north", backyard);
+        kitchen.setExits("west", diningroom);
 
-        dinningroom.setExits("down", basement);
-        dinningroom.setExits("up", dinningroom);
-        dinningroom.setExits("east", throneroom);
+        diningroom.setExits("down", basement);
+        diningroom.setExits("east", bossroom);
 
         // All items in the rooms
         hallway.setItem(new Item("key", 5, " this is a weird key, wonder where it goes"));
 
-        outside.setItem(new Item("sword", 2));
-        mainroom.setItem(new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils"));
+        mainroom.setItem(new Item("sword", 2));
+        
+        diningroom.setItem(new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils"));
 
         basement.setItem(new Item("health_potion", 5, ": Refreshing drink, not as refreshing as pils"));
 
@@ -158,11 +193,12 @@ public class Game
     }
 
     // implementations of user commands:
-    /**
+    /*/**
      * Attack a monster that is in the room
      * 
      * @param command
      */
+    /*
     private void attack(Command command) {
         if (!command.hasSecondWord()) {
             // if there is no second word, we don't who to attack
@@ -182,6 +218,7 @@ public class Game
         }
         return;
     }
+    */
 
     /**
      * Engage battle with creature

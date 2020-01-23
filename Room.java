@@ -23,7 +23,7 @@ public class Room
     private int power;
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private HashMap <String,Item> itemsInRoom = new HashMap<String, Item>();
+    private HashMap<String, Item> itemsInRoom = new HashMap<String, Item>();
     //private HashMap <String,Monster> monsterInRoom = new HashMap<String, Monster>();
     /**
      * Create a room described "description". Initially, it has
@@ -89,6 +89,7 @@ public class Room
     }
 
     public Item getItem(String name){
+        //return items.get(name);
         return itemsInRoom.get(name);
     }
 
@@ -149,5 +150,6 @@ public class Room
     {
         return "You are " + description + ".\n" + getExitString();
     }
+    
 }
 

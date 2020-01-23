@@ -1,4 +1,4 @@
-
+import java.util.Set;
 import java.util.*;
 import java.util.ArrayList;
 /**
@@ -15,10 +15,11 @@ public class Player
      */
     private int weight;
     private int health;
-    private boolean alive;
     private int power;
+    private boolean alive;
     private Item reward;
     private ArrayList <Item> playerInventory;
+    private HashMap<String, Item> inventory;
 
     /**
      * Constructor for objects of class Player.
@@ -31,8 +32,6 @@ public class Player
         alive = true;
         playerInventory = new ArrayList<Item>();
     }
-    
-    
 
     /**
      * This method is used when the player is killed.
@@ -76,10 +75,11 @@ public class Player
         return power;
     }
 
-/** 
+    /** 
      * This method returns the player's items in the inventory.
      */
     public ArrayList getPlayerInventory(){
         return playerInventory;
     }
+
 }
