@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.Scanner;
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -18,66 +19,38 @@ import java.util.*;
 
 public class Game 
 {
+    private HashMap <String, Monster> monsterMap = new HashMap<String, Monster>();
+    private Monster monster;
     private Player player;
+    Scanner myScanner = new Scanner(System.in);
+    Scanner enterScanner = new Scanner(System.in);
     private Parser parser;
     private Room currentRoom;
     private Room previousRoom;
     private HashMap <String,Item> inventory = new HashMap<String, Item>();
-    private Item weight;
-    Room outside, hallway, mainroom, puzzelroom, dinningroom, basement, 
-    greenhouse, throneroom;
-    //private Room previousRoom;
     private Stack<Room> history;
+    private Levelbuilder lvls;
 
     /**
      * Create the game and initialise its internal map.
      */
     public Game() 
     {
-        //Player = new Player();
-        createRooms();
+        lvls = new Levelbuilder();
+        currentRoom = lvls.createRooms();
         parser = new Parser();
         history = new Stack<Room>();
+        monsterMap = new HashMap<>();
     }
 
     /**
-     * Create all the rooms and link their exits together.
+     * Creates a new player.
      */
-    private void createRooms()
+    public void createPlayer(String naam)
     {
-
-        // create the rooms
-        outside = new Room("outside the main entrance of the Castle");
-        hallway = new Room("in the hallway");
-        mainroom = new Room("A big main room with expensive furniture");
-        dinningroom = new Room(" in Dinning room with a big table");
-        basement = new Room("in a big basement for random stuff");
-        greenhouse = new Room("This warm greenhouse has alot of fuit and vegetables");
-        puzzelroom = new Room("in puzzel room has alot of toys and games");
-        throneroom = new Room("OH S** this is the boss room");
-        // initialise room exits
-        outside.setExits("east", hallway);
-
-        hallway.setExits("east", mainroom);
-
-        mainroom.setExits("north", puzzelroom);
-        mainroom.setExits("south", dinningroom);
-
-        dinningroom.setExits("down", basement);
-        dinningroom.setExits("up", dinningroom);
-        dinningroom.setExits("east", throneroom);
-
-        // All items in the rooms
-        hallway.setItem(new Item("key", 5, " this is a weird key, wonder where it goes"));
-
-        outside.setItem(new Item("sword", 2));
-        mainroom.setItem(new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils"));
-
-        basement.setItem(new Item("health_potion", 5, ": Refreshing drink, not as refreshing as pils"));
-
-        //Monster in the rooms
-
-        currentRoom = outside;  // start game outside
+        int hp = 10;
+        int xp = 0;
+        player = new Player(naam, currentRoom, hp, xp);
     }
 
     /**
@@ -103,13 +76,47 @@ public class Game
      */
     private void printWelcome()
     {
+        String naam = naamGetter();
+        if(naam == null){
+            printWelcome();
+            return;
+        }
         System.out.println();
         System.out.println("Welcome to the World of Zuul!");
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
+        createPlayer(naam);
         System.out.println(currentRoom.getLongDescription());
         System.out.println();
+    }
+
+    /**
+     * kijkt of je 2 maal dezelfde naam invoert zodat je niet met een typfout speelt
+     */
+    private String naamGetter(){
+        System.out.println("what is your name?");
+        String naam = vraagNaam();
+        System.out.println("enter name again please");
+        String naam2 = vraagNaam();
+        if(naam.equals(naam2)){
+            return naam;
+        }
+        else{
+            return null;
+        }
+    }
+
+    /**
+     * vraag de naam van de autistische gebruiker lol
+     */
+    private String vraagNaam(){
+        Scanner reader;
+        reader = new Scanner(System.in);
+        String inputLine;   // will hold the full input line
+        System.out.print("> ");     // print prompt
+        inputLine = reader.nextLine();
+        return inputLine;
     }
 
     /**
@@ -127,73 +134,68 @@ public class Game
         }
 
         String commandWord = command.getCommandWord();
-        if (commandWord.equals("help")){
-            printHelp();
-        }
-        else if (commandWord.equals("go")){
-            goRoom(command);
-        }
-        else if (commandWord.equals("look" )){
-            look();
-        }
-        else if (commandWord.equals("quit")){
-            wantToQuit = quit(command);
-        }
-        else if (commandWord.equals("drink")){
-            drink();
-        }else if (commandWord.equals("inventory")){
-            printInventory();
-        }else if (commandWord.equals("back")){
-            goBack(command);
-        }else if (commandWord.equals("get")) {
-            getItem(command);
-        }else if (commandWord.equals("drop")) {
-            dropItem(command);
-        }else if (commandWord.equals("back")){
-            goBackRoom();
-        }else if (commandWord.equals("fight")){
-            fight();
+
+        switch(commandWord)
+        {
+            case "help" : printHelp();
+            break;
+            case "go" : goRoom(command);
+            break;
+            case "quit" : wantToQuit = quit(command);
+            break;
+            case "look" : look();
+            break;
+            case "inventory" : printInventory(); getTotalWeight();
+            break;
+            case "get" : getItem(command);
+            break;
+            case "drop" : dropItem(command);
+            break;
+            case "drink" : drink();
+            break;
+            case "back" : goBackRoom();
+            break;
+            case "attack" : attackMonster(command);
+            break;
+            case "superAttack" : superAttackMonster(command);
+            break;
         }
         return wantToQuit;
     }
 
     // implementations of user commands:
-    /**
-     * Attack a monster that is in the room
-     * 
-     * @param command
-     */
-    private void attack(Command command) {
-        if (!command.hasSecondWord()) {
-            // if there is no second word, we don't who to attack
-            setChanged();
-            notifyObservers("Attack what?");
+    public void attackMonster(Command command)
+    {
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know what we need to attack...
+            System.out.println("Attack what?");
             return;
         }
+        String monsterName = command.getSecondWord();
+        Monster currentMonster = monsterMap.get(monsterName);
+        if(currentMonster == null){
 
-        Room currentRoom = player1.getCurrentPlayerRoom();
-        Monster monster = currentRoom.getMonster(command.getSecondWord());
+            String monsterAttacked = command.getSecondWord();
+            int health = monster.getHP();
 
-        if (monster == null) {
-            // There is no monster by that name in the room
-            setChanged();
-            notifyObservers("There is no monster called "
-                + command.getSecondWord() + "!");
+            monster.setHP(health - player.getAttack());
         }
-        return;
     }
 
-    /**
-     * Engage battle with creature
-     */
-
-    public void fight(){
-        boolean currentRoommonster = false;
-        if ( currentRoommonster!= false) {
-            System.out.println("Put your glasses on STUPID!");
+    public void superAttackMonster(Command command)
+    {
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know what we need to attack...
+            System.out.println("SuperAttack what?");
+            return;
         }
-        else {
-            System.out.println("You attack the monster with your bare hands!" + " \n" + "Only one of you will remain victorious"); 
+        String monsterSupperAttacked = command.getSecondWord();
+        String monsterName = command.getSecondWord();
+        Monster newMonster = monsterMap.get(monsterName);
+        int healthPoints = monster.getHP();
+        
+        if(newMonster == null){
+            monster.setHP(healthPoints - player.getSuperAttack());
         }
     }
 
@@ -212,8 +214,9 @@ public class Game
         }
         else{
             inventory.remove(itemName);
-            currentRoom.setItem(newItem);
+            currentRoom.addItem(newItem);
             System.out.println("Dropped: " + itemName); 
+            System.out.println("your total weight: " + getTotalWeight());
         }
     }
 
@@ -234,8 +237,25 @@ public class Game
         else{
             inventory.put(itemName, newItem);
             currentRoom.removeItem(itemName);
-            System.out.println("Picked up: " + itemName); 
+            System.out.println("Picked up: " + itemName);
+            if (getTotalWeight() > 50){
+                inventory.remove(itemName);
+                currentRoom.addItem(newItem);
+                System.out.println("this items is too heavy");
+            }
+            else
+            {
+                System.out.println("New inventory weight: " + getTotalWeight());
+            }
         }
+    }
+
+    private int getTotalWeight(){
+        int output = 0;
+        for(String itemName : inventory.keySet()){
+            output = output + inventory.get(itemName).getWeight();
+        }
+        return output;
     }
 
     private void printInventory(){
@@ -282,11 +302,18 @@ public class Game
         if(nextRoom == null){
             System.out.println("There is no door!");
         }
-        else{
-            history.push(currentRoom);
+        if(nextRoom != null){
+            player.setRoom(nextRoom);
+            System.out.println(player.getRoom().getLongDescription());
+        }
+
+        if(!nextRoom.getKeyRoom()){
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
-            currentRoom.fightWithMonster();
+        }
+        else{history.push(currentRoom);
+            currentRoom = nextRoom;
+            System.out.println(currentRoom.getLongDescription());
         }
     }
 

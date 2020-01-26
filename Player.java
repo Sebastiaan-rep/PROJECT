@@ -1,85 +1,91 @@
+import java.util.HashSet;
+import java.util.Random;
 
-import java.util.*;
-import java.util.ArrayList;
 /**
- * The Player class stores all the information about the player.
+ * class Player - Houdt de speler bij.
  *
- * @author Kristiyan Parlikov & Marek Muzik
- * @version 1.0
- * @since 2019-10-19
+ * @author Mathijs Slabbinck & ook een beetje Jonathan Dhoop
+ * @version 29/05/2018
  */
 public class Player
 {
-    /**
-     * Fields.
-     */
-    private int weight;
-    private int health;
-    private boolean alive;
+    private String naam;
+    private Room currentRoom;
+    private int hp;
+    private int xp;
     private int power;
-    private Item reward;
-    private ArrayList <Item> playerInventory;
-
+    Random rand = new Random();
+    
     /**
-     * Constructor for objects of class Player.
+     * maakt de speler klaar
      */
-    public Player(int weight, int health)
+    public Player(String naam,Room currentRoom,int hp,int xp)
     {
-        this.weight = weight;
-        this.health = health;
-        power = 1;
-        alive = true;
-        playerInventory = new ArrayList<Item>();
+        this.naam = naam;
+        this.hp = hp;
+        this.xp = xp;
+    }
+    public void setRoom(Room room){
+        currentRoom = room;
+    }
+    public void getStronger(){
+        int  n = rand.nextInt(2) + 1;
+        if(n == 1)
+        {
+            hp++;
+        }
+        else
+        {
+            xp++;
+        }
     }
     
+    public int getAttack()
+    {
+        int  n = rand.nextInt(2) + 1;
+        if(n == 1)
+        {
+            return 1;
+        }
+        return 0;
+    }
     
-
-    /**
-     * This method is used when the player is killed.
-     */
-    public void die()
+    public int getSuperAttack()
     {
-        alive = false;
+        int  n = rand.nextInt(3) + 1;
+        if(n == 1)
+        {
+            return 3;
+        }
+        return 0; 
     }
-
-    /**
-     * This method sets the power of the player.
-     * @param newPower The changed power of the player.
-     */
-    public void setPower(int newPower)
+   
+    
+    /*
+    public boolean openRoom()
     {
-        power = newPower;
-    }
 
-    /**
-     * This method adds an earned item from a monster kill to the inventory
-     * @param newItem The "to be added" item.
-     */
-    public void addItemToInventory(Item newItem, String hallwayReward)
+        if (rugzak.contains())
+        {
+            rugzak.remove(item);
+            currentRoom.addItem(item);
+        }
+    }
+    */
+    
+    public int getHp()
     {
-        playerInventory.add(newItem);
-        System.out.println("Your reward:" + hallwayReward +" has been added your inventory");
+        return hp;
+    }    
+    
+    public int getXp()
+    {
+        return xp;
+
+    }
+    
+    public Room getRoom(){
+        return currentRoom;
     }
 
-    /**
-     * This method gives information about if the player is alive or
-     * dead.
-     */
-    public boolean getAlive(){
-        return alive;
-    }
-
-    /**
-     * This method returns the power of the player.
-     */
-    public int getPower(){
-        return power;
-    }
-
-/** 
-     * This method returns the player's items in the inventory.
-     */
-    public ArrayList getPlayerInventory(){
-        return playerInventory;
-    }
 }

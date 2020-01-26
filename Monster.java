@@ -1,84 +1,58 @@
 
 /**
- * The Monster class manages all the monsters in the game.
+ * class Monster - geef hier een beschrijving van deze class
  *
- * @author Kristiyan Parlikov & Marek Muzik
- * @version 1.0
- * @since 2019-10-19
+ * @author Jia wei Wang
+ * @version 26-01-2020
  */
 public class Monster
 {
-    /**
-     * Fields.
-     */
     private String name;
-    private int hitPoints;
-    private boolean alive;
-    private Item reward;
+    private String description;
+    private Room currentRoom;
+    private int HP;
+    private int power;
+    private boolean agressive;
 
     /**
-     * Constructor for objects of class Monster
-     * @param name The name of the monster.
-     * @param hitPoints The health level of the monster.
+     * Constructor voor objects van class Monster
      */
-    public Monster(String name, int hitPoints)
+    public Monster(String name, String description, int HP, int power, boolean agressive)
     {
-        alive = true;
-        this.hitPoints = hitPoints;
         this.name = name;
-
+        this.description = description;
+        this.HP = HP;
+        this.power = power;
+        this.agressive = agressive;
     }
-
-    /**
-     * This method gets the name of the monster.
-     */
+    
     public String getName()
     {
         return name;
     }
-
-    /**
-     * This method is used when the monster is killed.
-     */
-    public void die(){
-        alive=false;
-    }
-
-    /**
-     * This method gives information about if the monster is alive or
-     * already killed.
-     */
-    public boolean getAlive(){
-        return alive;
-    }
-
-    /**
-     * This method sets the reward from the monster.
-     * @param reward The new reward.
-     */
-    public void setItem(Item reward)
+    
+    public String getDescription()
     {
-        this.reward = reward;
+        return description;
     }
-
-    /**
-     * This method prints the infromation about the monster.
-     * @param currentRoomMonster This shows which is the monster required
-     * the information for.
-     * @param roomReward This shows which is the reward you can get by 
-     * killing the moster.
-     */
-    public void printMonsterInfo(Monster currentRoomMonster, Item roomReward)
+    
+    public void setHP(int HP)
     {
-        Monster monster = currentRoomMonster;
-        Item reward = roomReward;
-        if(alive == true){
-            System.out.println("Watch OUT! Here is the " + monster.getName() 
-                + " which guards a " + reward.getName());
-            System.out.println("Monster has " + hitPoints + " hitpoints!");
-
-        }else{
-            System.out.println(monster + " is already killed");
-        }
+        this.HP = HP;
+    }
+    
+    public int getHP()
+    {
+        return HP;
+    }
+    
+    public int getPower()
+    {
+        return power;
+    }
+    
+    public boolean getAgressive()
+    {
+        return agressive;
     }
 }

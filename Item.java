@@ -22,14 +22,15 @@ public class Item
         this.weight = weight;
         this.name = name;
     }
+
     /**
-     * Constructor for objects of class Item
+     * This method gets the power of the item.
      */
-    public Item(String name, int power)
+    public int getPower()
     {
-        this.name= name;
-        this.power=power;
+        return power;
     }
+    
     /*
      * Gets description of item
      */
