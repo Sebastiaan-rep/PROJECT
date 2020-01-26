@@ -19,10 +19,10 @@ import java.util.ArrayList;
 public class Room 
 {
     private String description;
-    private HashMap<String, Room> exits;        // stores exits of this room.
-    private HashMap <String, Item> itemsInRoom;             // stores items in this room
+    private HashMap<String, Room> exits;        // stores exits of this room.        
     private HashMap <String, Monster> monsterInRoom;    
     private boolean keyroom;
+    private HashMap<String, Item> itemsInRoom = new HashMap<String, Item>();
     /**
      * Create a room described "description". Initially, it has
      * no exits. "description" is something like "a kitchen" or
@@ -56,12 +56,12 @@ public class Room
     {
         return description;
     }
-    
+
     public void addMonster(Monster monster)
     {
         monsterInRoom.put(monster.getName(), monster);
     }
-    
+
     private String showMonsters(){
         String returnMonsters = "";
         if(monsterInRoom != null){
@@ -114,6 +114,7 @@ public class Room
     }
 
     public Item getItem(String name){
+        //return items.get(name);
         return itemsInRoom.get(name);
     }
 
@@ -122,7 +123,7 @@ public class Room
 
     }
 
-    public void addItem(Item newitem){
+    public void setItem(Item newitem){
         itemsInRoom.put(newitem.name, newitem);
     }
 
@@ -144,5 +145,6 @@ public class Room
     {
         return "You are " + description + ".\n" + getExitString();
     }
+
 }
 

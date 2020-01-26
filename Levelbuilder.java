@@ -47,7 +47,6 @@ public class Levelbuilder
         key = new Item("key", 5,"this is a weird key, wonder where it goes");
         health_potion = new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils");
         hallway.addMonster(rat);
-        outside.addItem(key);
 
         return outside;  // start game outside
     }

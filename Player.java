@@ -1,91 +1,33 @@
-import java.util.HashSet;
-import java.util.Random;
 
 /**
- * class Player - Houdt de speler bij.
+ * class Player - geef hier een beschrijving van deze class
  *
- * @author Mathijs Slabbinck & ook een beetje Jonathan Dhoop
- * @version 29/05/2018
+ * @author (jouw naam)
+ * @version (versie nummer of datum)
  */
 public class Player
 {
-    private String naam;
-    private Room currentRoom;
-    private int hp;
-    private int xp;
-    private int power;
-    Random rand = new Random();
-    
+    // instance variables - vervang deze door jouw variabelen
+    private int x;
+
     /**
-     * maakt de speler klaar
+     * Constructor voor objects van class Player
      */
-    public Player(String naam,Room currentRoom,int hp,int xp)
+    public Player()
     {
-        this.naam = naam;
-        this.hp = hp;
-        this.xp = xp;
-    }
-    public void setRoom(Room room){
-        currentRoom = room;
-    }
-    public void getStronger(){
-        int  n = rand.nextInt(2) + 1;
-        if(n == 1)
-        {
-            hp++;
-        }
-        else
-        {
-            xp++;
-        }
-    }
-    
-    public int getAttack()
-    {
-        int  n = rand.nextInt(2) + 1;
-        if(n == 1)
-        {
-            return 1;
-        }
-        return 0;
-    }
-    
-    public int getSuperAttack()
-    {
-        int  n = rand.nextInt(3) + 1;
-        if(n == 1)
-        {
-            return 3;
-        }
-        return 0; 
-    }
-   
-    
-    /*
-    public boolean openRoom()
-    {
-
-        if (rugzak.contains())
-        {
-            rugzak.remove(item);
-            currentRoom.addItem(item);
-        }
-    }
-    */
-    
-    public int getHp()
-    {
-        return hp;
-    }    
-    
-    public int getXp()
-    {
-        return xp;
-
-    }
-    
-    public Room getRoom(){
-        return currentRoom;
+        // geef de instance variables een beginwaarde
+        x = 0;
     }
 
+    /**
+     * Voorbeeld van een method - schrijf hier jouw comment
+     *
+     * @param  y    deze method krijgt deze parameter mee in de aanroep
+     * @return    deze method geeft de som van x en y terug
+     */
+    public int voorbeeldMethod(int y)
+    {
+        // schrijf hier jouw code
+        return x + y;
+    }
 }
