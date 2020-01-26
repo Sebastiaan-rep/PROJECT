@@ -14,7 +14,7 @@ import java.util.Scanner;
  *  rooms, creates the parser and starts the game.  It also evaluates and
  *  executes the commands that the parser returns.
  * 
- * @author  Michael Kölling and David J. Barnes
+ * @author Sebastiaan Rep and Jia Wei Wang
  * @version 2016.02.29
  */
 
@@ -31,7 +31,6 @@ public class Game
     private HashMap <String,Item> inventory = new HashMap<String, Item>();
     private Item weight;
     private Stack<Room> history;
-    private Levelbuilder lvls;
     private Menu menu;
     private static int limitOfMoves;
     private static int numberOfMoves;
@@ -49,8 +48,7 @@ public class Game
     public Game() 
     {
 
-        lvls = new Levelbuilder();
-        currentRoom = lvls.createRooms();
+        createRoom();
         parser = new Parser();
         history = new Stack<Room>();
         monsterMap = new HashMap<>();
@@ -69,7 +67,7 @@ public class Game
      * Create all items and place them inside of the rooms.
      * @author Jia Wei Wang and Sebastiaan Rep
      */
-    public void creatRoom()
+    public void createRoom()
     {
         // create the rooms
         outside     = new Room("outside the main entrance of king Java's Castle");
@@ -167,6 +165,9 @@ public class Game
         System.out.println();
     }
 
+    /**
+     * Let the user choose an diffulculty.
+     */
     private void chooseLevel()
     {
         // Choosing a level (asking to the user through the terminal)
@@ -198,6 +199,12 @@ public class Game
         }
     }
 
+    /**
+     * counts the moves of the user
+     * @return true if the limit of moves has been exeeded 
+     * @return false countinues the game and counts the amount of steps
+     */
+
     public static boolean countMove(){
         // Count a move
         numberOfMoves++;
@@ -218,7 +225,7 @@ public class Game
     }
 
     /**
-     * kijkt of je 2 maal dezelfde naam invoert zodat je niet met een typfout speelt
+     * Checks 2 times, for typo's in the username.
      */
     private String naamGetter(){
         System.out.println("what is your name?");
@@ -234,7 +241,7 @@ public class Game
     }
 
     /**
-     * vraag de naam van de autistische gebruiker lol
+     * Asks the name of the player.
      */
     private String vraagNaam(){
         Scanner reader;
@@ -286,9 +293,12 @@ public class Game
     }
 
     // implementations of user commands:
-    
-        private void dropItem(Command command) 
-        {
+    /**
+     * Let the user drop the item in his inventory
+     * @return continues the game.
+     */
+    private void dropItem(Command command) 
+    {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know what to drop...
             System.out.println("Wait a minute drop what?");
@@ -308,6 +318,10 @@ public class Game
         }
     }
 
+    /**
+     * Let the user pick up the item in the room, gets the weight wehen the max wight has been exeeded
+     * @return continues the game.
+     */
     private void getItem(Command command) 
     {
         if(!command.hasSecondWord()) {
