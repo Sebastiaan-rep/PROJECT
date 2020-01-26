@@ -1,3 +1,4 @@
+
 import java.util.*;
 /**
  *  This class is the main class of the "World of Zuul" application. 
@@ -22,20 +23,21 @@ public class Game
     private Parser parser;
     private Room currentRoom;
     private Room previousRoom;
+    private Room trap_room;
     private HashMap <String,Item> inventory = new HashMap<String, Item>();
     private Item weight;
     private Stack<Room> history;
     private Menu menu;
-    private 
-    
+    private static int limitOfMoves;
+    private static int numberOfMoves;
+
     Room outside, hallway, mainroom, puzzleroom, diningroom, basement, 
     greenhouse, bossroom, backyard, kitchen;
-    
-    
+
     public static void main(final String[] args){
         new Menu().runMenu();
     }
-    
+
     /**
      * Create the game and initialise its internal map.
      */
@@ -43,18 +45,14 @@ public class Game
     {
         //Player = new Player();
         createRooms();
-        parser = new Parser();
-        history = new Stack<Room>();
-        menu = new Menu();
-        int weight = 0;
-        int health = 0;
-        player = new Player(weight, health);
+        parser          = new Parser();
+        history         = new Stack<Room>();
+        menu            = new Menu();
     }
-    
+
     public void menu(){
         menu.runMenu();
     }
-    
 
     /**
      * Create all the rooms and link their exits together.
@@ -65,50 +63,56 @@ public class Game
     {
 
         // create the rooms
-        outside = new Room("outside the main entrance of king Java's Castle");
-        hallway = new Room("in the hallway");
-        mainroom = new Room("A big main room with expensive furniture");
-        puzzleroom = new Room("in puzzle room has alot of toys and games");
-        diningroom = new Room(" in Dinning room with a big table and lots of plastic food");
-        basement = new Room("in a big basement for random stuff en pils");
-        greenhouse = new Room("This warm greenhouse has alot of fuit and vegetables");
-        backyard = new Room("This is just a simple backyard with neglected plants and a few candles");
-        kitchen = new Room("This room is very dark, smells like the kitchen. I need some light");
-        bossroom = new Room("OH S** this is the boss room");
-        
+        outside     = new Room("outside the main entrance of king Java's Castle");
+        hallway     = new Room("in the hallway");
+        mainroom    = new Room("A big main room with expensive furniture");
+        puzzleroom  = new Room("in puzzle room has alot of toys and games");
+        diningroom  = new Room(" in Dinning room with a big table and lots of plastic food");
+        basement    = new Room("in a big basement for random stuff en pils");
+        greenhouse  = new Room("This warm greenhouse has alot of fuit and vegetables");
+        backyard    = new Room("This is just a simple backyard with neglected plants and a few candles");
+        kitchen     = new Room("This room is very dark, smells like the kitchen. I need some light");
+        bossroom    = new Room("OH S** this is the boss room");
+        trap_room   = new Room("Empty Room with a opening to the east.");
+
         // initialise room exits
-        outside.setExits("east", hallway);
+        outside.setExits        ("east", hallway);
 
-        hallway.setExits("east", mainroom);
+        hallway.setExits        ("east", mainroom);
 
-        mainroom.setExits("north", puzzleroom);
-        mainroom.setExits("south", diningroom);
-        
-        puzzleroom.setExits("east", greenhouse);
-        puzzleroom.setExits("south", mainroom);
-        
-        greenhouse.setExits("east", bossroom);
-        greenhouse.setExits("south", backyard);
-        greenhouse.setExits("west", puzzleroom);
-        
-        backyard.setExits("north", greenhouse);
-        backyard.setExits("south", kitchen);
-        backyard.setExits("west", mainroom);
-        
-        kitchen.setExits("north", backyard);
-        kitchen.setExits("west", diningroom);
+        mainroom.setExits       ("north", puzzleroom);
+        mainroom.setExits       ("south", diningroom);
 
-        diningroom.setExits("down", basement);
-        diningroom.setExits("east", bossroom);
+        puzzleroom.setExits     ("east", greenhouse);
+        puzzleroom.setExits     ("south", mainroom);
+
+        greenhouse.setExits     ("east", bossroom);
+        greenhouse.setExits     ("south", backyard);
+        greenhouse.setExits     ("west", puzzleroom);
+
+        backyard.setExits       ("north", greenhouse);
+        backyard.setExits       ("south", kitchen);
+        backyard.setExits       ("west", mainroom);
+
+        kitchen.setExits        ("north", backyard);
+        kitchen.setExits        ("west", diningroom);
+        kitchen.setExits        ("east", trap_room);
+
+        diningroom.setExits     ("down", basement);
+        diningroom.setExits     ("east", diningroom);
+
+        basement.setExits       ("up", diningroom);
+
+        trap_room.setExits      ("west", kitchen);
 
         // All items in the rooms
-        hallway.setItem(new Item("key", 5, " this is a weird key, wonder where it goes"));
+        hallway.setItem         (new Item("key", 5, " this is a weird key, wonder where it goes"));
 
-        mainroom.setItem(new Item("sword", 2));
-        
-        diningroom.setItem(new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils"));
+        mainroom.setItem        (new Item("sword", 2));
 
-        basement.setItem(new Item("health_potion", 5, ": Refreshing drink, not as refreshing as pils"));
+        diningroom.setItem      (new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils"));
+
+        basement.setItem        (new Item("health_potion", 5, ": Refreshing drink, not as refreshing as pils"));
 
         //Monster in the rooms
 
@@ -139,12 +143,65 @@ public class Game
     private void printWelcome()
     {
         System.out.println();
-        System.out.println("Welcome to the World of Zuul!");
-        System.out.println("World of Zuul is a new, incredibly boring adventure game.");
+        System.out.println("Welcome to the Legend of Jia Wei!");
+        System.out.println("This is where one boy it's journey begins!.");
         System.out.println("Type 'help' if you need help.");
+
+        chooseLevel();
+
         System.out.println();
         System.out.println(currentRoom.getLongDescription());
         System.out.println();
+    }
+
+    private void chooseLevel()
+    {
+        // Choosing a level (asking to the user through the terminal)
+        Scanner reader = new Scanner(System.in);
+        System.out.println("Please choose a level : Easy 20 moves(0) - Medium 16 moves(1) - Hard 14 moves (2)");
+        // Find the chosen level and alter the number of moves accorfing to the chosen one
+        try {
+            switch (reader.nextInt()) {
+                case 0:
+                limitOfMoves = 20;
+                System.out.println("You've chosen the easy way to win ! - Number of moves : " + limitOfMoves);
+                break;
+                case 1:
+                limitOfMoves = 16;
+                System.out.println("You've chosen the medium level :)- Number of moves : " + limitOfMoves);
+                break;
+                case 2:
+                limitOfMoves = 14;
+                System.out.println("It's gonna be hard this way :@  - Number of moves : " + limitOfMoves);
+                break;
+                default:
+                limitOfMoves = 20;
+                System.out.println("Unkown command - Default level : Easy - Number of moves : " + limitOfMoves);
+                break;
+            }
+        } catch(Exception e){
+            limitOfMoves = 20;
+            System.out.println("Unkown command - Default level : Easy - Number of moves : " + limitOfMoves);
+        }
+    }
+
+    public static boolean countMove(){
+        // Count a move
+        numberOfMoves++;
+
+        // Give some informations concerning the number of moves
+        if (numberOfMoves < limitOfMoves) {
+            System.out.println("Current number of moves : " + numberOfMoves);
+            System.out.println("Moves left : " + (limitOfMoves - numberOfMoves));
+            return false;
+            // Ending the game if the number of moves is reached
+        } else {
+            System.out.println("You have reached the maximum number of moves");
+            System.out.println("By the way, GAME OVER ! ");
+            System.out.println();
+            System.out.println();
+            return true;
+        }
     }
 
     /**
@@ -200,25 +257,25 @@ public class Game
      */
     /*
     private void attack(Command command) {
-        if (!command.hasSecondWord()) {
-            // if there is no second word, we don't who to attack
-            setChanged();
-            notifyObservers("Attack what?");
-            return;
-        }
-
-        Room currentRoom = player1.getCurrentPlayerRoom();
-        Monster monster = currentRoom.getMonster(command.getSecondWord());
-
-        if (monster == null) {
-            // There is no monster by that name in the room
-            setChanged();
-            notifyObservers("There is no monster called "
-                + command.getSecondWord() + "!");
-        }
-        return;
+    if (!command.hasSecondWord()) {
+    // if there is no second word, we don't who to attack
+    setChanged();
+    notifyObservers("Attack what?");
+    return;
     }
-    */
+
+    Room currentRoom = player1.getCurrentPlayerRoom();
+    Monster monster = currentRoom.getMonster(command.getSecondWord());
+
+    if (monster == null) {
+    // There is no monster by that name in the room
+    setChanged();
+    notifyObservers("There is no monster called "
+    + command.getSecondWord() + "!");
+    }
+    return;
+    }
+     */
 
     /**
      * Engage battle with creature
@@ -325,6 +382,24 @@ public class Game
             System.out.println(currentRoom.getLongDescription());
             currentRoom.fightWithMonster();
         }
+    }
+
+    public int getNumberOfMoves() 
+    {
+        return numberOfMoves;
+    }
+
+    /**
+     * @return the limitOfMoves
+     */
+    public int getLimitOfMoves() 
+    {
+        return limitOfMoves;
+    }
+    
+    public void setLimitOfMoves(int lom) 
+    {
+        limitOfMoves = lom;
     }
 
     /** 
