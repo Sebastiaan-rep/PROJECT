@@ -121,11 +121,11 @@ public class Game
         diningroom.setItem      (new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils"));
 
         basement.setItem        (new Item("health_potion", 5, ": Refreshing drink, not as refreshing as pils"));
-        
+
         kitchen.setItem         (new Item("Appel", 2, "Joe know wat the doktors says, 1 appel a day keeps tandart away ;)"));
-        
+
         backyard.setItem        (new Item("candel", 2,"nice candel"));
-        
+
         //Monster in the rooms
         Monster mouse, boss, knight, romano;
         //create monsters
@@ -133,12 +133,12 @@ public class Game
         boss = new Monster("King Teun", "Hmm... this is the end boss ?! whats wrong with the developers", 200, 30);
         knight = new Monster("Knight Sebastiaan","LOL he looks like the knight from shrek ;)", 120, 20);
         romano = new Monster("Romano","Giant flesh eating bunny", 100, 20);
-        
+
         basement.addMonster(mouse);
         diningroom.addMonster(knight);
         greenhouse.addMonster(romano);
         bossroom.addMonster(boss);
-        
+
         currentRoom = outside;  // start game outside
     }
 
@@ -173,6 +173,7 @@ public class Game
         System.out.println();
         System.out.println("Welcome to the Legend of Jia Wei!");
         System.out.println("This is where one boy it's journey begins!.");
+        System.out.println("Your princes needs your help!, King teun is holding g captive.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
         chooseLevel();
@@ -288,7 +289,7 @@ public class Game
         {
             case "help" : printHelp();
             break;
-            case "go" : goRoom(command);
+            case "go" : wantToQuit = goRoom(command);
             break;
             case "quit" : wantToQuit = quit(command);
             break;
@@ -367,6 +368,7 @@ public class Game
             }
         }
     }
+
     /**
      * Get the total wight in the users inventory
      * @return TotalWeight
@@ -410,12 +412,12 @@ public class Game
      * Try to go in one direction. If there is an exit, enter
      * the new room, otherwise print an error message.
      */
-    private void goRoom(Command command) 
+    private boolean goRoom(Command command) 
     {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
             System.out.println("Go where?");
-            //return false;
+            return false;
         }
 
         String direction = command.getSecondWord();
@@ -425,12 +427,17 @@ public class Game
 
         if(nextRoom == null){
             System.out.println("There is no door!");
-        }
+        }        
         else{
             history.push(currentRoom);
             currentRoom = nextRoom;
             System.out.println(currentRoom.getLongDescription());
+            if(currentRoom == bossroom){
+                System.out.println("Good job, you have saved the princes!");
+                return true;
+            }
         }
+        return false;
     }
 
     /**
@@ -469,6 +476,7 @@ public class Game
             return true;  // signal that we want to quit
         }
     }
+
     /**
      * Prints the current location
      * 
@@ -480,6 +488,7 @@ public class Game
         System.out.print(currentRoom.getExitString());         
         System.out.println(); 
     }
+
     /**
      * Looks around the room prints te location. 
      *  
@@ -488,6 +497,7 @@ public class Game
     {
         System.out.println(currentRoom.getLongDescription());
     }
+
     /**
      * Drink a potion.
      */
@@ -506,6 +516,7 @@ public class Game
         currentRoom = nextRoom;
         System.out.println(currentRoom.getLongDescription());
     }
+
     /**
      * Goes to the previousRoom, if not prints warning
      * 
@@ -529,6 +540,7 @@ public class Game
             enterRoom(previousRoom);
         }
     }
+
     /**
      * When History of room is empty prints warning.
      * else contious with game.
