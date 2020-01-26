@@ -40,7 +40,7 @@ public class CommandWords
     }
 
     /**
-     * druk alle geldige opdrachten af naar System.out
+     * Prints all the valid commands to System.out
      */
     public void showAll(){
         for(String command: validCommands){

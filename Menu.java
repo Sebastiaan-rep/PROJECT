@@ -5,6 +5,15 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is part of the "World of Zuul" application. 
+ * "World of Zuul" is a very simple, text based adventure game.  
+ * 
+ * This class holds the methode's for the menu of the game.
+ *
+ * @author  Michael Kölling and David J. Barnes
+ * @version 2016.02.29
+ */
 public class Menu {
 
     //Instance Variables
@@ -19,7 +28,9 @@ public class Menu {
         
         
     }
-
+    /**
+     * Runs the menu
+     */
     public void runMenu() {
         printHeader();
         while (!exit) {
@@ -28,7 +39,9 @@ public class Menu {
             performAction(choice);
         }
     }
-
+    /**
+     * Header of the game
+     */
     private void printHeader() {
         System.out.println("+-----------------------------------+");
         System.out.println("|           THE LEGEND              |");
@@ -36,14 +49,19 @@ public class Menu {
         System.out.println("|             JIA WEI               |");
         System.out.println("+-----------------------------------+");
     }
-
+    /**
+     * the options where the use can use from.
+     */
     private void printMenu() {
         displayHeader("Please make a selection");
         System.out.println("1) Play");
         System.out.println("2) About");
         System.out.println("0) Exit");
     }
-
+    /**
+     * validation that the users input will come throught
+     * @return choice of the user
+     */
     private int getMenuChoice() {
         Scanner keyboard = new Scanner(System.in);
         int choice = -1;
@@ -60,7 +78,9 @@ public class Menu {
         } while (choice < 0 || choice > 4);
         return choice;
     }
-
+    /**
+     * case exits the game, case 1 starts the game, case 2 gives a summary if the developers of the game.
+     */
     private void performAction(int choice) {
         Game game = new Game();
         switch (choice) {

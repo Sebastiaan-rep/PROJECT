@@ -49,9 +49,9 @@ public class Game
     {
 
         createRoom();
-        parser = new Parser();
-        history = new Stack<Room>();
-        monsterMap = new HashMap<>();
+        parser          = new Parser();
+        history         = new Stack<Room>();
+        monsterMap      = new HashMap<>();
         parser          = new Parser();
         history         = new Stack<Room>();
         menu            = new Menu();
@@ -92,6 +92,7 @@ public class Game
 
         puzzleroom.setExits     ("east", greenhouse);
         puzzleroom.setExits     ("south", mainroom);
+        puzzleroom.setExits     ("west", bossroom);
 
         greenhouse.setExits     ("east", bossroom);
         greenhouse.setExits     ("south", backyard);
@@ -120,9 +121,24 @@ public class Game
         diningroom.setItem      (new Item("health_potion", 3,": Refreshing drink, not as refreshing as pils"));
 
         basement.setItem        (new Item("health_potion", 5, ": Refreshing drink, not as refreshing as pils"));
-
+        
+        kitchen.setItem         (new Item("Appel", 2, "Joe know wat the doktors says, 1 appel a day keeps tandart away ;)"));
+        
+        backyard.setItem        (new Item("candel", 2,"nice candel"));
+        
         //Monster in the rooms
-
+        Monster mouse, boss, knight, romano;
+        //create monsters
+        mouse = new Monster("Mini Mouse Stijn", "little hyperactief mouse,", 100, 10);
+        boss = new Monster("King Teun", "Hmm... this is the end boss ?! whats wrong with the developers", 200, 30);
+        knight = new Monster("Knight Sebastiaan","LOL he looks like the knight from shrek ;)", 120, 20);
+        romano = new Monster("Romano","Giant flesh eating bunny", 100, 20);
+        
+        basement.addMonster(mouse);
+        diningroom.addMonster(knight);
+        greenhouse.addMonster(romano);
+        bossroom.addMonster(boss);
+        
         currentRoom = outside;  // start game outside
     }
 
@@ -351,7 +367,10 @@ public class Game
             }
         }
     }
-
+    /**
+     * Get the total wight in the users inventory
+     * @return TotalWeight
+     */
     private int getTotalWeight(){
         int output = 0;
         for(String itemName : inventory.keySet()){
@@ -360,6 +379,9 @@ public class Game
         return output;
     }
 
+    /**
+     * Prints the items in your inventory
+     */
     private void printInventory(){
         String output = "";
         for(String itemName : inventory.keySet()){
@@ -411,6 +433,9 @@ public class Game
         }
     }
 
+    /**
+     * @return the NumberOfMoves
+     */
     public int getNumberOfMoves() 
     {
         return numberOfMoves;
@@ -444,7 +469,10 @@ public class Game
             return true;  // signal that we want to quit
         }
     }
-
+    /**
+     * Prints the current location
+     * 
+     */
     private void printLocationInfo()
     {
         System.out.println("You are " +                            
@@ -452,12 +480,17 @@ public class Game
         System.out.print(currentRoom.getExitString());         
         System.out.println(); 
     }
-
+    /**
+     * Looks around the room prints te location. 
+     *  
+     */
     private void look()
     {
         System.out.println(currentRoom.getLongDescription());
     }
-
+    /**
+     * Drink a potion.
+     */
     private void drink()
     {
         System.out.println("you drank a healing potion and gained 1 lifepoint");
@@ -473,7 +506,10 @@ public class Game
         currentRoom = nextRoom;
         System.out.println(currentRoom.getLongDescription());
     }
-
+    /**
+     * Goes to the previousRoom, if not prints warning
+     * 
+     */
     private void goBack(Command command)
     {
         if(command.hasSecondWord())
@@ -493,7 +529,10 @@ public class Game
             enterRoom(previousRoom);
         }
     }
-
+    /**
+     * When History of room is empty prints warning.
+     * else contious with game.
+     */
     private void goBackRoom(){
         if(history.isEmpty()){
             System.out.println("There is nowhere to go!");

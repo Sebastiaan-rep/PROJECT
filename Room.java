@@ -38,16 +38,6 @@ public class Room
         keyroom = false;
     }
 
-    public void setKeyroom(boolean key)
-    {
-        keyroom = key;
-    }
-
-    public boolean getKeyRoom()
-    {
-        return keyroom;
-    }
-
     /**
      * @return The short description of the room
      * (the one that was defined in the constructor).
@@ -56,12 +46,18 @@ public class Room
     {
         return description;
     }
-
+    /**
+     * adds a monster in a room
+     * 
+     */
     public void addMonster(Monster monster)
     {
         monsterInRoom.put(monster.getName(), monster);
     }
-
+    /**
+     * loops throught the monsters and print the monster that is currently in the room
+     * 
+     */
     private String showMonsters(){
         String returnMonsters = "";
         if(monsterInRoom != null){
@@ -84,10 +80,9 @@ public class Room
     }
 
     /**
-     * Retouneer een string met daarin de uitgangen van de ruimte,
-     * bijvoorbeeld "Exits: north west".
-     * @return Een omschrijving van de aanwezige uitgangen in de 
-     * ruimte.
+     * Return a string with the exits if the room
+     * Example: Exits: north west
+     * @return A description of all the the exits of the room
      */
     public String getExitString()
     {
@@ -103,30 +98,40 @@ public class Room
     }
 
     /**      
-     * Retourneert een string die de uitgangen van de ruimte beschrijft,       
-     * bijvoorbeeld:      
-     * "Exits: north west".      
+     * Get the exits of the room.   
      */ 
     public Room getExit(String direction)
     {
         return exits.get(direction);
 
     }
-
+    /**
+     * gets item name from the room
+     */
     public Item getItem(String name){
         //return items.get(name);
         return itemsInRoom.get(name);
     }
-
+    /**
+     * removes items from the room
+     */
     public void removeItem(String itemName){
         itemsInRoom.remove(itemName);
 
     }
-
+    /**
+     * set new items in the room
+     */
     public void setItem(Item newitem){
         itemsInRoom.put(newitem.name, newitem);
     }
-
+    
+    
+    /**
+     * prints all the items in the room
+     * @param name, description, weight
+     * @return een overzicht van items in de room
+     */
     public String getRoomItems(){
         String output = "";
         for(String itemName : itemsInRoom.keySet()){
@@ -136,10 +141,10 @@ public class Room
     }
 
     /**
-     * Retourneer een lange omschrijving van deze ruimte, van de vorm:
-     *      Je bent nu in de Puzzelroom.
+     * Returns a string of the current room description and exits
+     *      You are in the puzzle Room
      *      Exits: east south
-     * @return Een omschrijving van de ruimte en haar uitgangen.
+     * @return description of the room with the exits
      */
     public String getLongDescription()
     {
